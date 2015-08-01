@@ -1,6 +1,6 @@
-pkgbase = chemkit-git
-	pkgdesc = An open source software library for cheminformatics, molecular modeling and molecular visualization
-	pkgver = 1101
+pkgbase = chemkit-builder-git
+	pkgdesc = Lightweight molecular editor built using chemkit
+	pkgver = 6
 	pkgrel = 1
 	url = http://www.chemkit.org/
 	arch = i686
@@ -13,10 +13,11 @@ pkgbase = chemkit-git
 	depends = qt4
 	depends = boost-libs
 	depends = glu
-	provides = chemkit
-	conflicts = chemkit
-	source = git+https://github.com/kylelutz/chemkit
+	depends = chemkit
+	provides = chemkit-builder
+	conflicts = chemkit-builder
+	source = git+https://github.com/kylelutz/chemkit-builder
 	sha256sums = SKIP
 
-pkgname = chemkit-git
+pkgname = chemkit-builder-git
 
