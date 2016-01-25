@@ -1,0 +1,6 @@
+# Build files
+pkg/
+src/
+
+# Source files
+*.gz

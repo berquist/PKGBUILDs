@@ -5,32 +5,31 @@
 
 pkgname=openblas-lapack
 _pkgname=OpenBLAS
-pkgver=0.2.14
-pkgrel=4
-pkgdesc="Optimized BLAS library based on GotoBLAS2 1.13 BSD (providing blas, lapack, and cblas)"
-arch=('i686' 'x86_64')
+pkgver=0.2.15
+pkgrel=2
+pkgdesc="Optimized BLAS library based on GotoBLAS2 1.13 BSD (providing BLAS, LAPACK, and CBLAS)"
+arch=("i686" "x86_64")
 url="http://xianyi.github.com/OpenBLAS/"
-license=('BSD')
-depends=('gcc-libs')
-makedepends=('perl' 'gcc-fortran')
-provides=('openblas' 'blas=3.5.0' 'lapack=3.5.0' 'cblas')
-conflicts=('openblas' 'blas' 'lapack' 'cblas')
+license=("BSD")
+depends=("gcc-libs")
+makedepends=("perl" "gcc-fortran")
+_majorver=3
+_fullver=3.6.0
+provides=("openblas" "blas=${_fullver}" "lapack=${_fullver}" "cblas=${_fullver}")
+conflicts=("openblas" "blas" "lapack" "cblas")
 options=(!emptydirs staticlibs)
 source=(${_pkgname}-v${pkgver}.tar.gz::https://github.com/xianyi/OpenBLAS/archive/v${pkgver}.tar.gz)
-sha256sums=('2411c4f56f477b42dff54db2b7ffc0b7cf53bb9778d54982595c64cc69c40fc1')
+sha256sums=('73c40ace5978282224e5e122a41c8388c5a19e65a6f2329c2b7c0b61bacc9044')
 
-_config="USE_OPENMP=1 MAJOR_VERSION=3 NO_LAPACK=0"
+_config="FC=gfortran USE_OPENMP=1 USE_THREAD=1 MAJOR_FULLVERSION=${_majorver} NO_LAPACK=0"
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
 
-  NPROC=`/usr/bin/grep "physical id" /proc/cpuinfo|sort|uniq|wc -l`
-  NCORE4PROC=`/usr/bin/grep "cores" /proc/cpuinfo|sort|tail -n 1|sed -e 's/cpu cores.*: //'`
-  let NCORE=NPROC*NCORE4PROC
+  NTHREADS=$(\grep "cores" /proc/cpuinfo | tail -n 1 | sed 's/cpu cores.*: //')
 
   make \
-      ${_config} \
-      NUM_THREADS=${NCORE} \
+      "${_config} NUM_THREADS=${NTHREADS}" \
       libs netlib shared
 }
 
@@ -54,19 +53,26 @@ package() {
   # Install license
   install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
-  # Symlink to provide blas, cblas and lapack
+  # Symlink to provide BLAS, CBLAS and LAPACK
   cd "${pkgdir}/usr/lib/"
   # BLAS
   ln -sf libopenblas.so libblas.so
-  ln -sf libopenblas.so libblas.so.3
-  ln -sf libopenblas.so libblas.so.3.5.0
-  # CBLAS
+  ln -sf libopenblas.so libblas.so.${_majorver}
+  ln -sf libopenblas.so libblas.so.${_fullver}
+  ln -sf libopenblas.a  libblas.a
+  # CBLAS (C interface)
   ln -sf libopenblas.so libcblas.so
+  ln -sf libopenblas.so libcblas.so.${_majorver}
+  ln -sf libopenblas.so libcblas.so.${_fullver}
   ln -sf libopenblas.a  libcblas.a
   # LAPACK
   ln -sf libopenblas.so liblapack.so
-  ln -sf libopenblas.so liblapack.so.3
-  ln -sf libopenblas.so liblapack.so.3.5.0
+  ln -sf libopenblas.so liblapack.so.${_majorver}
+  ln -sf libopenblas.so liblapack.so.${_fullver}
+  ln -sf libopenblas.a  liblapack.a
+  # LAPACKE (C interface)
+  ln -sf libopenblas.so liblapacke.so
+  ln -sf libopenblas.so liblapacke.so.${_majorver}
+  ln -sf libopenblas.so liblapacke.so.${_fullver}
+  ln -sf libopenblas.a  liblapacke.a
 }
-
-# vim:set ts=2 sw=2 et:
