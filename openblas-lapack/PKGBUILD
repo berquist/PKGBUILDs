@@ -15,8 +15,8 @@ depends=("gcc-libs")
 makedepends=("perl" "gcc-fortran")
 _majorver=3
 _fullver=3.5.0
-provides=("openblas" "blas=${_fullver}" "lapack=${_fullver}" "cblas=${_fullver}")
-conflicts=("openblas" "blas" "lapack" "cblas")
+provides=("openblas" "blas=${_fullver}" "lapack=${_fullver}" "cblas=${_fullver}" "lapacke=${_fullver}")
+conflicts=("openblas" "blas" "lapack" "cblas" "lapacke")
 options=(!emptydirs staticlibs)
 source=(${_pkgname}-${pkgver}.tar.gz::https://github.com/xianyi/OpenBLAS/archive/v${pkgver}.tar.gz)
 sha256sums=('73c40ace5978282224e5e122a41c8388c5a19e65a6f2329c2b7c0b61bacc9044')
