@@ -1,0 +1,7 @@
+# Build files
+pkg/
+src/
+*.xz
+
+# Source files
+*.bz2
