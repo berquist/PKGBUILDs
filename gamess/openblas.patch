@@ -1,0 +1,61 @@
+diff --git a/config.orig b/config
+index 737927f..81cb066 100755
+--- a/config.orig
++++ b/config
+@@ -509,7 +509,7 @@ else
+    echo "Type 'ls /usr/lib64/atlas'               to look for Atlas"
+ endif
+ echo " "
+-echo -n "Enter your choice of 'mkl' or 'atlas' or 'acml' or 'none': "
++echo -n "Enter your choice of 'mkl' or 'atlas' or 'acml' or 'openblas' or 'none': "
+ set GMS_MATHLIB=$<
+ #
+ switch ($GMS_MATHLIB)
+@@ -713,6 +713,19 @@ switch ($GMS_MATHLIB)
+       endif
+       breaksw
+ 
++   case openblas:
++      badopenblas:
++      echo -n "Enter full path to OpenBLAS libraries (without 'lib' subdirectory): "
++      set openblaspath=$<
++      if (!(-d $openblaspath)) then
++         echo " "
++         echo "The directory $openblaspath does not exist."
++         echo " "
++         goto badopenblas
++      endif
++      set GMS_MATHLIB_PATH=$openblaspath/lib
++      breaksw
++
+    default:
+       echo "You didn't provide a valid math library name, try again."
+       echo " "
+diff --git a/lked.orig b/lked
+index 52830e3..3e38dd7 100755
+--- a/lked.orig
++++ b/lked
+@@ -435,6 +435,11 @@ if ($TARGET == linux32) then
+       set BLAS=' '
+       breaksw
+ 
++   case openblas:
++      set MATHLIBS="$GMS_MATHLIB_PATH/libopenblas.a -lpthread"
++      set BLAS=' '
++      breaksw
++
+    case none:
+    default:
+       echo "Warning.  No math library was found, you should install one."
+@@ -599,6 +604,11 @@ if ($TARGET == linux64) then
+       set BLAS=' '
+       breaksw
+ 
++   case openblas:
++      set MATHLIBS="$GMS_MATHLIB_PATH/libopenblas.a -lpthread"
++      set BLAS=' '
++      breaksw
++
+    case none:
+    default:
+       echo "Warning.  No math library was found, you should install one."

@@ -1,0 +1,87 @@
+# Maintainer: Gao xiang<hughgao01@gmail.com>
+# Modified by: Eric Berquist <eric DOT berquist AT gmail DOT com>
+
+pkgname=gamess
+pkgver=2014R1
+pkgrel=2
+pkgdesc='A general ab initio quantum chemistry package. For single machine use only.'
+arch=('x86_64')
+url='http://www.msg.ameslab.gov/GAMESS/GAMESS.html'
+license=('custom')
+depends=('gcc-fortran' 'tcsh' 'openblas-lapack')
+install=${pkgname}.install
+# You MUST download the package from http://www.msg.ameslab.gov/GAMESS/GAMESS.html and put it in the PKGBUILD folder!
+source=('gamess-current.tar.gz::file://gamess-current.tar.gz'
+        'rungms.patch'
+        'openblas.patch')
+md5sums=('6403592eaa885cb3691505964d684516'
+         'dd24c6666b18cf8ee78006a8ac95d886'
+         'c7f58d240817eda584a47f45476cf03a')
+
+prepare() {
+    cd "${pkgname}"
+
+    _GMS_PATH="$(pwd)"
+    _GMS_BUILD_DIR="$(pwd)"
+    mkdir -p "${_GMS_BUILD_DIR}"/{object,tools,ddi,tests}
+
+    # generate install.info
+    cat > "${_GMS_BUILD_DIR}"/install.info <<EOF
+# install path
+setenv GMS_PATH            $_GMS_PATH
+# build path
+setenv GMS_BUILD_DIR       $_GMS_BUILD_DIR
+# machine type
+setenv GMS_TARGET          linux64
+# FORTRAN compiler setup
+setenv GMS_FORTRAN         gfortran
+# gamess does not support gfortran 5.x, using 4.9 instead
+setenv GMS_GFORTRAN_VERNO  4.9
+# mathematical library setup
+setenv GMS_MATHLIB         openblas
+setenv GMS_MATHLIB_PATH    /usr/lib
+# parallel message passing model setup
+setenv GMS_DDI_COMM        sockets
+# LIBCCHEM CPU/GPU code interface
+setenv GMS_LIBCCHEM        false
+# These only matter when attempting to use LIBCCHEM.
+# Needs 'cuda' and 'hdf5-cpp-fortran' with static libraries.
+# setenv GMS_CUDA_PATH       /opt/cuda
+# tesla (1.3), fermi (2.0), or kepler (3.5)
+# setenv GMS_CUDA_BOARD      fermi
+# setenv GMS_HDF5_PATH       /usr
+EOF
+
+    # test the compiler setup by creating actvte.x
+    sed -e "s/^\*UNX/    /" tools/actvte.code > actvte.f
+    gfortran -o "${_GMS_BUILD_DIR}"/tools/actvte.x actvte.f
+    rm actvte.f
+
+    # patch the rungms driver script
+    patch -p1 -i "${srcdir}"/rungms.patch
+    # patch for using OpenBLAS as math library
+    patch -p1 -i "${srcdir}"/openblas.patch
+}
+
+build() {
+    cd "${pkgname}"/ddi
+    ./compddi
+    mv ddikick.x ..
+
+    cd ..
+    ./compall
+
+    # cd ./libcchem
+    # ./build-cchem
+
+    # cd ..
+    ./lked gamess 01
+}
+
+package() {
+    cd "${pkgname}"
+
+    install -d "${pkgdir}"/opt/gamess "${pkgdir}"/usr/bin
+    cp -a ./* "${pkgdir}"/opt/gamess/
+    install -Dm755 "${pkgdir}"/opt/gamess/rungms "${pkgdir}"/usr/bin
+}
