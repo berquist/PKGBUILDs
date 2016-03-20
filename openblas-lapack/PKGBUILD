@@ -6,7 +6,7 @@
 pkgname=openblas-lapack
 _pkgname=OpenBLAS
 pkgver=0.2.16
-pkgrel=1
+pkgrel=2
 pkgdesc="Optimized BLAS library based on GotoBLAS2 1.13 BSD (also providing LAPACK)"
 arch=("i686" "x86_64")
 url="http://xianyi.github.com/OpenBLAS/"
@@ -15,8 +15,8 @@ depends=("gcc-libs")
 makedepends=("perl" "gcc-fortran")
 _majorver=3
 _fullver=3.6.0
-provides=("openblas" "blas=${_fullver}" "lapack=${_fullver}" "cblas=${_fullver}" "lapacke=${_fullver}" "atlas-lapack-base")
-conflicts=("openblas" "blas" "lapack" "cblas" "lapacke" "atlas-lapack")
+provides=("openblas" "blas=${_fullver}" "lapack=${_fullver}" "cblas=${_fullver}" "lapacke=${_fullver}")
+conflicts=("openblas" "blas" "lapack" "cblas" "lapacke" "atlas-lapack-base")
 options=(!emptydirs staticlibs)
 source=(${_pkgname}-${pkgver}.tar.gz::https://github.com/xianyi/OpenBLAS/archive/v${pkgver}.tar.gz)
 sha256sums=('766f350d0a4be614812d535cead8c816fc3ad3b9afcd93167ea5e4df9d61869b')
@@ -44,7 +44,7 @@ package() {
   # Install license
   install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
-  # Symlink to "provide" libraries that are all contaioned in OpenBLAS.
+  # Symlink to "provide" libraries that are all contained in OpenBLAS.
   cd "${pkgdir}/usr/lib/"
   targets=(
     blas
@@ -52,7 +52,6 @@ package() {
     cblas
     lapack
     lapacke
-    atlas
   )
   for target in ${targets[@]}; do
     ln -sf libopenblas.so lib${target}.so
