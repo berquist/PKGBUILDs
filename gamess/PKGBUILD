@@ -16,7 +16,7 @@ source=('gamess-current.tar.gz::file://gamess-current.tar.gz'
         'openblas.patch')
 md5sums=('6403592eaa885cb3691505964d684516'
          'dd24c6666b18cf8ee78006a8ac95d886'
-         'c7f58d240817eda584a47f45476cf03a')
+         '3ad6df587b6e3ddc9a5416b381797a7c')
 
 prepare() {
     cd "${pkgname}"

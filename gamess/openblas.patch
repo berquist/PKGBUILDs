@@ -40,7 +40,7 @@ index 52830e3..3e38dd7 100755
        breaksw
  
 +   case openblas:
-+      set MATHLIBS="$GMS_MATHLIB_PATH/libopenblas.a -lpthread"
++      set MATHLIBS="$GMS_MATHLIB_PATH/libopenblas.a -lpthread -fopenmp"
 +      set BLAS=' '
 +      breaksw
 +
@@ -52,7 +52,7 @@ index 52830e3..3e38dd7 100755
        breaksw
  
 +   case openblas:
-+      set MATHLIBS="$GMS_MATHLIB_PATH/libopenblas.a -lpthread"
++      set MATHLIBS="$GMS_MATHLIB_PATH/libopenblas.a -lpthread -fopenmp"
 +      set BLAS=' '
 +      breaksw
 +
