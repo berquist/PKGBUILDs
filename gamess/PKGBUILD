@@ -2,7 +2,7 @@
 # Modified by: Eric Berquist <eric DOT berquist AT gmail DOT com>
 
 pkgname=gamess
-pkgver=2014R1
+pkgver=2016R1
 pkgrel=2
 pkgdesc='A general ab initio quantum chemistry package. For single machine use only.'
 arch=('x86_64')
@@ -14,9 +14,9 @@ install=${pkgname}.install
 source=('gamess-current.tar.gz::file://gamess-current.tar.gz'
         'rungms.patch'
         'openblas.patch')
-md5sums=('6403592eaa885cb3691505964d684516'
-         'dd24c6666b18cf8ee78006a8ac95d886'
-         '3ad6df587b6e3ddc9a5416b381797a7c')
+md5sums=('47ef3161ab148acf98a118997825f9a0'
+         '0bee0a494e6e71737209dc21c265e815'
+         '24e81ddc1e6be9f2c0a2d71fdf2236e2')
 
 prepare() {
     cd "${pkgname}"
@@ -35,8 +35,8 @@ setenv GMS_BUILD_DIR       $_GMS_BUILD_DIR
 setenv GMS_TARGET          linux64
 # FORTRAN compiler setup
 setenv GMS_FORTRAN         gfortran
-# gamess does not support gfortran 5.x, using 4.9 instead
-setenv GMS_GFORTRAN_VERNO  4.9
+# gamess does not support gfortran 6.x, using 5.9 instead
+setenv GMS_GFORTRAN_VERNO  5.3
 # mathematical library setup
 setenv GMS_MATHLIB         openblas
 setenv GMS_MATHLIB_PATH    /usr/lib
@@ -50,6 +50,12 @@ setenv GMS_LIBCCHEM        false
 # tesla (1.3), fermi (2.0), or kepler (3.5)
 # setenv GMS_CUDA_BOARD      fermi
 # setenv GMS_HDF5_PATH       /usr
+# Intel Xeon Phi build: true/false
+setenv GMS_PHI             false
+# Shared memory type: sysv/posix
+setenv GMS_SHMTYPE         sysv
+# OpenMP support: true/false
+setenv GMS_OPENMP          false
 EOF
 
     # test the compiler setup by creating actvte.x

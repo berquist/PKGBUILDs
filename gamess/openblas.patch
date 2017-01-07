@@ -1,20 +1,20 @@
-diff --git a/config.orig b/config
-index 737927f..81cb066 100755
---- a/config.orig
+diff --git a/config b/config
+index 9589f4f..7775dcc 100755
+--- a/config
 +++ b/config
-@@ -509,7 +509,7 @@ else
-    echo "Type 'ls /usr/lib64/atlas'               to look for Atlas"
+@@ -527,7 +527,7 @@ else
+    echo "Type 'ls /opt/pgi/osx86-64/*/lib/*       to look for libblas.a from PGI"
  endif
  echo " "
--echo -n "Enter your choice of 'mkl' or 'atlas' or 'acml' or 'none': "
-+echo -n "Enter your choice of 'mkl' or 'atlas' or 'acml' or 'openblas' or 'none': "
+-echo -n "Enter your choice of 'mkl' or 'atlas' or 'acml' or 'pgiblas' or 'none': "
++echo -n "Enter your choice of 'mkl' or 'atlas' or 'acml' or 'pgiblas' or 'openblas' or 'none': "
  set GMS_MATHLIB=$<
  #
  switch ($GMS_MATHLIB)
-@@ -713,6 +713,19 @@ switch ($GMS_MATHLIB)
+@@ -750,6 +750,18 @@ switch ($GMS_MATHLIB)
        endif
+       set GMS_MATHLIB_PATH=$pgipath
        breaksw
- 
 +   case openblas:
 +      badopenblas:
 +      echo -n "Enter full path to OpenBLAS libraries (without 'lib' subdirectory): "
@@ -27,15 +27,14 @@ index 737927f..81cb066 100755
 +      endif
 +      set GMS_MATHLIB_PATH=$openblaspath/lib
 +      breaksw
-+
     default:
        echo "You didn't provide a valid math library name, try again."
        echo " "
-diff --git a/lked.orig b/lked
-index 52830e3..3e38dd7 100755
---- a/lked.orig
+diff --git a/lked b/lked
+index 8be5dff..3ce66f4 100755
+--- a/lked
 +++ b/lked
-@@ -435,6 +435,11 @@ if ($TARGET == linux32) then
+@@ -441,6 +441,11 @@ if ($TARGET == linux32) then
        set BLAS=' '
        breaksw
  
@@ -47,7 +46,7 @@ index 52830e3..3e38dd7 100755
     case none:
     default:
        echo "Warning.  No math library was found, you should install one."
-@@ -599,6 +604,11 @@ if ($TARGET == linux64) then
+@@ -639,6 +644,11 @@ if ($TARGET == linux64) then
        set BLAS=' '
        breaksw
  
