@@ -3,7 +3,7 @@
 
 pkgname=gamess
 pkgver=2017R1
-pkgrel=2
+pkgrel=3
 pkgdesc='A general ab initio quantum chemistry package. For single machine use only.'
 arch=('x86_64')
 url='http://www.msg.ameslab.gov/GAMESS/GAMESS.html'
