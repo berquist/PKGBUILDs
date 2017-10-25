@@ -16,7 +16,7 @@ depends=("gcc-libs")
 makedepends=("perl" "gcc-fortran")
 provides=("openblas" "blas=${_blasver}")
 conflicts=("openblas" "blas")
-options=(!makeflags !buildflags !emptydirs staticlibs)
+options=(!strip !makeflags !buildflags !emptydirs staticlibs)
 source=(${_PkgName}-${pkgver}.tar.gz::https://github.com/xianyi/${_PkgName}/archive/v${pkgver}.tar.gz)
 sha256sums=('5ef38b15d9c652985774869efd548b8e3e972e1e99475c673b25537ed7bcf394')
 
@@ -49,8 +49,10 @@ package() {
     blas
   )
 
+  ln -sf libopenblas.so libopenblas.so.0
   for target in ${targets[@]}; do
     ln -sf libopenblas.so lib${target}.so
+    ln -sf libopenblas.so lib${target}.so.0
     ln -sf libopenblas.so lib${target}.so.${_blasver:0:1}
     ln -sf libopenblas.so lib${target}.so.${_blasver}
     ln -sf libopenblas.a  lib${target}.a

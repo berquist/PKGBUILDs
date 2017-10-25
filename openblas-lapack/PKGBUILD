@@ -17,7 +17,7 @@ depends=("gcc-libs")
 makedepends=("perl" "gcc-fortran")
 provides=("openblas" "blas=${_lapackver}" "lapack=${_lapackver}" "cblas=${_lapackver}" "lapacke=${_lapackver}")
 conflicts=("openblas" "blas" "lapack" "cblas" "lapacke" "atlas-lapack-base")
-options=(!makeflags !buildflags !emptydirs staticlibs)
+options=(!strip !makeflags !buildflags !emptydirs staticlibs)
 source=(${_PkgName}-${pkgver}.tar.gz::https://github.com/xianyi/${_PkgName}/archive/v${pkgver}.tar.gz)
 sha256sums=('5ef38b15d9c652985774869efd548b8e3e972e1e99475c673b25537ed7bcf394')
 
