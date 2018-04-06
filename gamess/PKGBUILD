@@ -2,19 +2,19 @@
 # Modified by: Eric Berquist <eric DOT berquist AT gmail DOT com>
 
 pkgname=gamess
-pkgver=2017R1
-pkgrel=3
+pkgver=2018R1
+pkgrel=1
 pkgdesc='A general ab initio quantum chemistry package. For single machine use only.'
 arch=('x86_64')
 url='http://www.msg.ameslab.gov/GAMESS/GAMESS.html'
 license=('custom')
-depends=('gcc-fortran' 'tcsh' 'openblas-lapack')
+depends=('gcc-fortran' 'tcsh' 'openblas')
 install=${pkgname}.install
 # You MUST download the package from http://www.msg.ameslab.gov/GAMESS/GAMESS.html and put it in the PKGBUILD folder!
 source=('gamess-current.tar.gz::file://gamess-current.tar.gz'
         'rungms.patch'
         'openblas.patch')
-md5sums=('e9fa2e725ccbd69f4d996ab68bb65ff2'
+md5sums=('5a9370ab80a2e9693148d839c324b5ba'
          '0bee0a494e6e71737209dc21c265e815'
          '24e81ddc1e6be9f2c0a2d71fdf2236e2')
 
@@ -35,8 +35,6 @@ setenv GMS_BUILD_DIR       $_GMS_BUILD_DIR
 setenv GMS_TARGET          linux64
 # FORTRAN compiler setup
 setenv GMS_FORTRAN         gfortran
-# gamess does not support gfortran 6.x, using 5.9 instead
-setenv GMS_GFORTRAN_VERNO  5.3
 # mathematical library setup
 setenv GMS_MATHLIB         openblas
 setenv GMS_MATHLIB_PATH    /usr/lib
@@ -55,7 +53,10 @@ setenv GMS_PHI             false
 # Shared memory type: sysv/posix
 setenv GMS_SHMTYPE         sysv
 # OpenMP support: true/false
-setenv GMS_OPENMP          false
+setenv GMS_OPENMP          true
+setenv EFP_OPENMP          true
+setenv MAKEFP_OPENMP       true
+setenv RIMP2_OPENMP        true
 EOF
 
     # test the compiler setup by creating actvte.x
