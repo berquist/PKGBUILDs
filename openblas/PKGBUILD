@@ -9,7 +9,7 @@ pkgver=0.2.20
 _blasver=3.7.0
 pkgrel=1
 pkgdesc="Optimized BLAS library based on GotoBLAS2 1.13 BSD"
-arch=("i686" "x86_64")
+arch=("x86_64")
 url="http://xianyi.github.com/OpenBLAS/"
 license=("BSD")
 depends=("gcc-libs")
@@ -21,7 +21,7 @@ source=(${_PkgName}-${pkgver}.tar.gz::https://github.com/xianyi/${_PkgName}/arch
 sha256sums=('5ef38b15d9c652985774869efd548b8e3e972e1e99475c673b25537ed7bcf394')
 
 NTHREADS=$(\grep "cores" /proc/cpuinfo | tail -n 1 | sed 's/cpu cores.*: //')
-_config="FC=gfortran USE_OPENMP=1 NO_CBLAS=1 NO_LAPACK=1 MAJOR_VERSION=3 NUM_THREADS=${NTHREADS} NO_AFFINITY=1"
+_config="FC=gfortran USE_OPENMP=1 NO_CBLAS=1 NO_LAPACK=1 NUM_THREADS=${NTHREADS} NO_AFFINITY=1 INTERFACE64=1"
 
 build() {
   cd "${srcdir}/${_PkgName}-${pkgver}"
@@ -49,13 +49,13 @@ package() {
     blas
   )
 
-  ln -sf libopenblas.so libopenblas.so.0
+  ln -sfv libopenblas.so libopenblas.so.0
   for target in ${targets[@]}; do
-    ln -sf libopenblas.so lib${target}.so
-    ln -sf libopenblas.so lib${target}.so.0
-    ln -sf libopenblas.so lib${target}.so.${_blasver:0:1}
-    ln -sf libopenblas.so lib${target}.so.${_blasver}
-    ln -sf libopenblas.a  lib${target}.a
+    ln -sfv libopenblas.so lib${target}.so
+    ln -sfv libopenblas.so lib${target}.so.0
+    ln -sfv libopenblas.so lib${target}.so.${_blasver:0:1}
+    ln -sfv libopenblas.so lib${target}.so.${_blasver}
+    ln -sfv libopenblas.a  lib${target}.a
   done
 
   sed -i -e "s%$pkgdir%%" "$pkgdir/usr/lib/cmake/openblas/OpenBLASConfig.cmake"
