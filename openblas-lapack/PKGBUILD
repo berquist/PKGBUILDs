@@ -22,7 +22,7 @@ source=(${_PkgName}-${pkgver}.tar.gz::https://github.com/xianyi/${_PkgName}/arch
 sha256sums=('5ef38b15d9c652985774869efd548b8e3e972e1e99475c673b25537ed7bcf394')
 
 NTHREADS=$(\grep "cores" /proc/cpuinfo | tail -n 1 | sed 's/cpu cores.*: //')
-_config="FC=gfortran USE_OPENMP=1 NO_LAPACK=0 NUM_THREADS=${NTHREADS} NO_AFFINITY=1 INTERFACE64=1 BUILD_LAPACK_DEPRECATED=1 BUILD_RELAPACK=1"
+_config="FC=gfortran USE_OPENMP=1 NO_LAPACK=0 NUM_THREADS=${NTHREADS} NO_AFFINITY=1 BUILD_LAPACK_DEPRECATED=1 BUILD_RELAPACK=1"
 
 build() {
   cd "${srcdir}/${_PkgName}-${pkgver}"
