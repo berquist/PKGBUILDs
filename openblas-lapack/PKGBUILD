@@ -6,8 +6,8 @@
 pkgname=openblas-lapack
 _PkgName=OpenBLAS
 _pkgname=openblas
-pkgver=0.2.20
-_lapackver=3.7.0
+pkgver=0.3.0
+_lapackver=3.8.0
 pkgrel=1
 pkgdesc="Optimized BLAS library based on GotoBLAS2 1.13 BSD (also providing LAPACK)"
 arch=("x86_64")
@@ -19,7 +19,7 @@ provides=("openblas" "blas=${_lapackver}" "lapack=${_lapackver}" "cblas=${_lapac
 conflicts=("openblas" "blas" "lapack" "cblas" "lapacke" "atlas-lapack-base")
 options=(!strip !makeflags !buildflags !emptydirs staticlibs)
 source=(${_PkgName}-${pkgver}.tar.gz::https://github.com/xianyi/${_PkgName}/archive/v${pkgver}.tar.gz)
-sha256sums=('5ef38b15d9c652985774869efd548b8e3e972e1e99475c673b25537ed7bcf394')
+sha256sums=('cf51543709abe364d8ecfb5c09a2b533d2b725ea1a66f203509b21a8e9d8f1a1')
 
 NTHREADS=$(\grep "cores" /proc/cpuinfo | tail -n 1 | sed 's/cpu cores.*: //')
 _config="FC=gfortran USE_OPENMP=1 NO_LAPACK=0 NUM_THREADS=${NTHREADS} NO_AFFINITY=1 BUILD_LAPACK_DEPRECATED=1 BUILD_RELAPACK=1"
