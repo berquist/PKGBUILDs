@@ -2,7 +2,7 @@
 # Modified by: Eric Berquist <eric DOT berquist AT gmail DOT com>
 
 pkgname=gamess
-pkgver=2018R1
+pkgver=2018R3
 pkgrel=1
 pkgdesc='A general ab initio quantum chemistry package. For single machine use only.'
 arch=('x86_64')
@@ -12,11 +12,9 @@ depends=('gcc-fortran' 'tcsh' 'openblas')
 install=${pkgname}.install
 # You MUST download the package from http://www.msg.ameslab.gov/GAMESS/GAMESS.html and put it in the PKGBUILD folder!
 source=('gamess-current.tar.gz::file://gamess-current.tar.gz'
-        'rungms.patch'
-        'openblas.patch')
-md5sums=('5a9370ab80a2e9693148d839c324b5ba'
-         '0bee0a494e6e71737209dc21c265e815'
-         '24e81ddc1e6be9f2c0a2d71fdf2236e2')
+        'rungms.patch')
+md5sums=('4e253a01b8f79526867b2fa8efecebef'
+         'ec868e789c349a911b6745f0b4768baf')
 
 prepare() {
     cd "${pkgname}"
@@ -35,11 +33,14 @@ setenv GMS_BUILD_DIR       $_GMS_BUILD_DIR
 setenv GMS_TARGET          linux64
 # FORTRAN compiler setup
 setenv GMS_FORTRAN         gfortran
+setenv GMS_GFORTRAN_VERNO  8.2
 # mathematical library setup
 setenv GMS_MATHLIB         openblas
 setenv GMS_MATHLIB_PATH    /usr/lib
 # parallel message passing model setup
 setenv GMS_DDI_COMM        sockets
+# setenv GMS_MPI_LIB
+# setenv GMS_MPI_PATH
 # LIBCCHEM CPU/GPU code interface
 setenv GMS_LIBCCHEM        false
 # These only matter when attempting to use LIBCCHEM.
@@ -52,11 +53,14 @@ setenv GMS_LIBCCHEM        false
 setenv GMS_PHI             false
 # Shared memory type: sysv/posix
 setenv GMS_SHMTYPE         sysv
-# OpenMP support: true/false
+# SC17 SCF OpenMP support: true/false
 setenv GMS_OPENMP          true
-setenv EFP_OPENMP          true
-setenv MAKEFP_OPENMP       true
-setenv RIMP2_OPENMP        true
+# ???
+# setenv EFP_OPENMP          true
+# setenv MAKEFP_OPENMP       true
+# setenv RIMP2_OPENMP        true
+# Build Michigan State University Coupled Cluster: true/false
+setenv GMS_MSUCC           false
 EOF
 
     # test the compiler setup by creating actvte.x
@@ -66,8 +70,6 @@ EOF
 
     # patch the rungms driver script
     patch -p1 -i "${srcdir}"/rungms.patch
-    # patch for using OpenBLAS as math library
-    patch -p1 -i "${srcdir}"/openblas.patch
 }
 
 build() {
