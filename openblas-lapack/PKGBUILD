@@ -1,4 +1,5 @@
-# Maintainer: eolianoe <eolianoe [at] gmail [DoT] com>
+# Maintainer: thrasibule <guillaume.horel@gmail.com>
+# Contributor: eolianoe <eolianoe [at] gmail [DoT] com>
 # Contributor: Jiaxi Hu <sftrytry _AT_ gmail _DOT_ com>
 # Contributor: Giuseppe Borzi <gborzi _AT_ ieee _DOT_ org>
 # Modified by: Eric Berquist <eric DOT berquist AT gmail DOT com>
@@ -6,9 +7,9 @@
 pkgname=openblas-lapack
 _PkgName=OpenBLAS
 _pkgname=openblas
-pkgver=0.3.6
+pkgver=0.3.7
 _lapackver=3.8.0
-pkgrel=1
+pkgrel=3
 pkgdesc="Optimized BLAS library based on GotoBLAS2 1.13 BSD (also providing LAPACK)"
 arch=("x86_64")
 url="http://xianyi.github.com/OpenBLAS/"
@@ -19,10 +20,10 @@ provides=("openblas" "blas=${_lapackver}" "lapack=${_lapackver}" "cblas=${_lapac
 conflicts=("openblas" "blas" "lapack" "cblas" "lapacke" "atlas-lapack-base")
 options=(!strip !makeflags !buildflags !emptydirs staticlibs)
 source=(${_PkgName}-${pkgver}.tar.gz::https://github.com/xianyi/${_PkgName}/archive/v${pkgver}.tar.gz)
-sha256sums=('e64c8fe083832ffbc1459ab6c72f71d53afd3b36e8497c922a15a06b72e9002f')
+sha256sums=('bde136122cef3dd6efe2de1c6f65c10955bbb0cc01a520c2342f5287c28f9379')
 
 NTHREADS=$(\grep "cores" /proc/cpuinfo | tail -n 1 | sed 's/cpu cores.*: //')
-_config="FC=gfortran USE_OPENMP=1 NO_LAPACK=0 NUM_THREADS=${NTHREADS} NO_AFFINITY=1 BUILD_LAPACK_DEPRECATED=1 BUILD_RELAPACK=1 USE_COMPILER_TLS=0 TARGET=ZEN"
+_config="FC=gfortran USE_OPENMP=1 USE_THREAD=1 NO_LAPACK=0 NUM_THREADS=${NTHREADS} NO_AFFINITY=1 BUILD_LAPACK_DEPRECATED=1 BUILD_RELAPACK=1 TARGET=ZEN"
 
 build() {
   cd "${srcdir}/${_PkgName}-${pkgver}"
@@ -54,6 +55,12 @@ package() {
     lapacke
   )
 
+  sed -i -e "s%$pkgdir%%" "${pkgdir}"/usr/lib/cmake/openblas/OpenBLASConfig.cmake
+  sed -i -e "s%$pkgdir%%" "${pkgdir}"/usr/lib/pkgconfig/openblas.pc
+  for target in blas cblas lapack; do
+    cp -a "${pkgdir}"/usr/lib/pkgconfig/{openblas,$target}.pc
+  done
+
   ln -sfv libopenblas.so libopenblas.so.${_lapackver:0:1}
   for target in ${targets[@]}; do
     ln -sfv libopenblas.so lib${target}.so
@@ -61,7 +68,4 @@ package() {
     ln -sfv libopenblas.so lib${target}.so.${_lapackver}
     ln -sfv libopenblas.a  lib${target}.a
   done
-
-  sed -i -e "s%$pkgdir%%" "${pkgdir}/usr/lib/cmake/openblas/OpenBLASConfig.cmake"
-  sed -i -e "s%$pkgdir%%" "${pkgdir}/usr/lib/pkgconfig/openblas.pc"
 }
