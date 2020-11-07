@@ -1,0 +1,105 @@
+diff --git a/.SRCINFO b/.SRCINFO
+index 01953d5..d82ee02 100644
+--- a/.SRCINFO
++++ b/.SRCINFO
+@@ -1,19 +1,18 @@
+ pkgbase = molden
+ 	pkgdesc = A program for molecular and electronic structure visualization
+ 	pkgver = 6.5
+-	pkgrel = 1
++	pkgrel = 2
+ 	url = http://www.cmbi.ru.nl/molden/
+ 	arch = i686
+ 	arch = x86_64
+ 	license = custom
+-	makedepends = vi
+ 	makedepends = gcc-fortran
+ 	makedepends = xorgproto
+-	makedepends = libx11
+-	makedepends = mesa
+-	makedepends = glu
+-	depends = mesa
++	makedepends = vi
++	depends = gcc-libs
+ 	depends = glu
++	depends = libx11
++	depends = libxmu
+ 	optdepends = openbabel: to create 2D images of the molecules in a .sdf file
+ 	optdepends = wget: to fetch PDB from rcsb.org
+ 	provides = molden
+diff --git a/PKGBUILD b/PKGBUILD
+index f3eeaf7..6325166 100644
+--- a/PKGBUILD
++++ b/PKGBUILD
+@@ -1,57 +1,44 @@
+ # Maintainer: Dan Maftei <dan.maftei@gmail.com>
+ pkgname="molden"
+ pkgver=6.5
+-pkgrel=1
++pkgrel=2
+ pkgdesc="A program for molecular and electronic structure visualization"
+ arch=('i686' 'x86_64')
+ url="http://www.cmbi.ru.nl/molden/"
+ license=('custom')
+-groups=()
+-depends=('mesa' 'glu')
+-makedepends=(
+-    'vi'
+-    'gcc-fortran'
+-    'xorgproto'
+-    'libx11'
+-    'mesa'
+-    'glu'
+-)
++depends=('gcc-libs' 'glu' 'libx11' 'libxmu')
++makedepends=('gcc-fortran' 'xorgproto' 'vi')
+ optdepends=(
+    'openbabel: to create 2D images of the molecules in a .sdf file'
+    'wget: to fetch PDB from rcsb.org'
+ )
+ provides=('molden')
+-conflicts=()
+-replaces=()
+-backup=()
+-options=()
+-install=
+-changelog=
+ source=(
+     "ftp://ftp.cmbi.umcn.nl/pub/molgraph/molden/$pkgname$pkgver.tar.gz"
+ )
+-noextract=()
+ md5sums=('97bfffd55e166ca3a9fbddee111993ff')
+ 
+-build() {
++prepare() {
+   cd "molden$pkgver"
+-  # Patch Makefile for surf utility to reflect 
+-  # the replacement of missing makedepend 
++  # Patch Makefile for surf utility to reflect
++  # the replacement of missing makedepend
+   sed -i 's/@.*makedepend.*$/@ \$(CC) \$(INCLUDE) -M \$(SRCS) \> makedep/' src/surf/Makefile
+-  
++
+   # Patch to compile with gfortran 10
+   # Contributed by Panadestein on 5/31/2020
+   sed -i 's/FFLAGS = -g ${AFLAG}/& -fallow-argument-mismatch/g' makefile
+   sed -i 's/FFLAGS = -c -g -ffast-math -funroll-loops -O3/& -fallow-argument-mismatch/g' src/ambfor/makefile
++}
++
++build() {
++  cd "molden$pkgver"
+   make
+ }
+ 
+ package() {
+   cd "molden$pkgver"
+   install -t "$pkgdir/usr/bin/"  -Dm755 bin/{molden,gmolden}
+-  install -t "$pkgdir/usr/lib/$pkgname/" -Dm755 src/ambfor/ambfor src/ambfor/ambmd src/surf/surf  
+-  install -t "$pkgdir/usr/share/doc/$pkgname" -Dm755 doc/figures.ps.Z  doc/manual.ps.Z doc/manual.txt.Z  
+-  install -t "$pkgdir/usr/share/licenses/$pkgname/" -Dm755 CopyRight COMMERCIAL_LICENSE REGISTER     
++  install -t "$pkgdir/usr/lib/$pkgname/" -Dm755 bin/{ambfor,ambmd,surf}
++  install -t "$pkgdir/usr/share/doc/$pkgname" -Dm755 doc/figures.ps.Z  doc/manual.ps.Z doc/manual.txt.Z
++  install -t "$pkgdir/usr/share/licenses/$pkgname/" -Dm755 CopyRight COMMERCIAL_LICENSE REGISTER
+ }
+-
+-
