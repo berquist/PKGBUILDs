@@ -1,7 +1,8 @@
 # Build files
 pkg/
 src/
-*.xz
+*.tar.xz
+*.tar.zst
 
 # Source files
 *.gz
