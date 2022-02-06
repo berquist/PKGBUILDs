@@ -2,10 +2,10 @@
 # Modified by: Eric Berquist <eric DOT berquist AT gmail DOT com>
 
 pkgname="molden"
-pkgver=6.5
-pkgrel=2
+pkgver=6.7
+pkgrel=1
 pkgdesc="A program for molecular and electronic structure visualization"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.cmbi.ru.nl/molden/"
 license=('custom')
 depends=('gcc-libs' 'glu' 'libx11' 'libxmu')
@@ -15,13 +15,11 @@ optdepends=(
    'wget: to fetch PDB from rcsb.org'
 )
 provides=('molden')
-source=(
-    "ftp://ftp.cmbi.umcn.nl/pub/molgraph/molden/$pkgname$pkgver.tar.gz"
-)
-md5sums=('97bfffd55e166ca3a9fbddee111993ff')
+source=("ftp://ftp.cmbi.umcn.nl/pub/molgraph/molden/${pkgname}${pkgver}.tar.gz")
+md5sums=('65d2f8fbdb2800e48bb0e12c814dfcd5')
 
 prepare() {
-  cd "molden$pkgver"
+  cd "molden${pkgver}"
   # Patch Makefile for surf utility to reflect
   # the replacement of missing makedepend
   sed -i 's/@.*makedepend.*$/@ \$(CC) \$(INCLUDE) -M \$(SRCS) \> makedep/' src/surf/Makefile
@@ -33,14 +31,14 @@ prepare() {
 }
 
 build() {
-  cd "molden$pkgver"
+  cd "molden${pkgver}"
   make
 }
 
 package() {
-  cd "molden$pkgver"
-  install -t "$pkgdir/usr/bin/"  -Dm755 bin/{molden,gmolden}
-  install -t "$pkgdir/usr/lib/$pkgname/" -Dm755 bin/{ambfor,ambmd,surf}
-  install -t "$pkgdir/usr/share/doc/$pkgname" -Dm755 doc/figures.ps.Z  doc/manual.ps.Z doc/manual.txt.Z
-  install -t "$pkgdir/usr/share/licenses/$pkgname/" -Dm755 CopyRight COMMERCIAL_LICENSE REGISTER
+  cd "molden${pkgver}"
+  install -t "${pkgdir}/usr/bin/"  -Dm755 bin/{molden,gmolden}
+  install -t "${pkgdir}/usr/lib/${pkgname}/" -Dm755 bin/{ambfor,ambmd,surf}
+  install -t "${pkgdir}/usr/share/doc/${pkgname}" -Dm755 doc/figures.ps.Z  doc/manual.ps.Z doc/manual.txt.Z
+  install -t "${pkgdir}/usr/share/licenses/${pkgname}/" -Dm755 CopyRight COMMERCIAL_LICENSE REGISTER
 }
